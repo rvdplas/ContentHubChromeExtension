@@ -1,0 +1,43 @@
+.container {
+    /* height: 600px; */
+    /* width: 200px; */
+    /* background-color: purple; */
+}
+
+.invalid {
+    width: 200px;
+    background-color: red;
+    color: white;
+    font-size: large;
+}
+
+div.image {
+}
+
+table {
+    /* border-spacing: 1px; */
+    border-collapse: collapse;
+    width: 220px;
+}
+
+tr:hover {
+    background-color: yellow;
+}
+
+td {
+    /* border: 1px solid teal; */
+    width: 160px;
+}
+
+    td.image {
+        width: 30px;
+    }
+
+        td.image img {
+            width: inherit;
+        }
+
+    td.text {
+        font-size: medium;
+        /* padding-left: 10px; */
+    }
