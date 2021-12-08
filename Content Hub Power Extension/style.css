@@ -1,27 +1,28 @@
-.container {
-    /* height: 600px; */
-    /* width: 200px; */
-    /* background-color: purple; */
+body {
+    background-color: #263238;
+    color: white;
+}
+
+img#logo {
+    width: 220px;
 }
 
 .invalid {
-    width: 200px;
+    width: 220px;
     background-color: red;
     color: white;
-    font-size: large;
-}
-
-div.image {
+    text-align: center;
+    font-size: medium;
 }
 
 table {
-    /* border-spacing: 1px; */
     border-collapse: collapse;
     width: 220px;
 }
 
-tr:hover {
-    background-color: yellow;
+tr.link:hover {
+    background-color: #f4ff81;
+    color: black;
 }
 
 td {

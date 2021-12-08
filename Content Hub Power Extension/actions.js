@@ -7,7 +7,7 @@ function mediaProcessingClick(event) {
 }
 
 function pageslick(event) {
-    pageslick("en-us/admin/page");
+    navigateToContentHubPage("en-us/admin/page");
 }
 
 function schemaClick(event) {
@@ -32,6 +32,14 @@ function themesClick(event) {
 
 function triggersClick(event) {
     navigateToContentHubPage("/en-us/admin/triggers");
+}
+
+function assetDetailPageClick(event){
+    navigateToContentHubPage("en-us/admin/page/566?q=asset+detail");
+}
+
+function mAssetPageClick(event) {
+    navigateToContentHubPage("/en-us/admin/definitionmgmt/detail/40");
 }
 
 function navigateToContentHubPage(urlPath) {
@@ -77,6 +85,9 @@ function initialize() {
     addClickEvent("taxonomy", taxonomyClick);
     addClickEvent("themes", themesClick);
     addClickEvent("triggers", triggersClick);
+
+    addClickEvent("assetDetailPage", assetDetailPageClick);
+    addClickEvent("m_asset", mAssetPageClick);
 }
 
 function getBody() {
