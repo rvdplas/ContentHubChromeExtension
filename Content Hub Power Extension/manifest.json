@@ -1,26 +1,26 @@
 {
   "name": "Content Hub Power Extension",
-  "description": "Awesome Extension that makes managing Content Hub easier!",
+  "description": "Awesome extension that makes managing Content Hub easier!",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": [ "activeTab", "scripting", "tabs", "storage" ],
-    "options_ui": {
+  "permissions": ["activeTab", "scripting", "tabs", "storage"],
+  "options_ui": {
     "page": "options.html",
     "open_in_tab": false
   },
   "action": {
     "default_popup": "index.html",
     "default_icon": {
-      "16": "/images/get_started16.png",
-      "32": "/images/get_started32.png",
-      "48": "/images/get_started48.png",
-      "128": "/images/get_started128.png"
+      "16": "./public/images/get_started16.png",
+      "32": "./public/images/get_started32.png",
+      "48": "./public/images/get_started48.png",
+      "128": "./public/images/get_started128.png"
     }
   },
   "icons": {
-    "16": "/images/get_started16.png",
-    "32": "/images/get_started32.png",
-    "48": "/images/get_started48.png",
-    "128": "/images/get_started128.png"
+    "16": "./public/images/get_started16.png",
+    "32": "./public/images/get_started32.png",
+    "48": "./public/images/get_started48.png",
+    "128": "./public/images/get_started128.png"
   }
 }
