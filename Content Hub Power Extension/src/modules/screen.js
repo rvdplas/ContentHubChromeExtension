@@ -10,24 +10,15 @@ export function setScreenState() {
         func: () => document.body.id, // get the body id from document in current tab
       },
       (results) => {
-        const shouldActivate =
+        const isContentHubPage =
           !results || results.some((frame) => frame.result.startsWith("m-"));
 
-        // todo: style the page in such manner, that the page is not usable in deactivated state
-        if (shouldActivate) {
-          activate();
+        if (isContentHubPage) {
+          document.getElementById("invalid").style.display = "none";
         } else {
-          hide();
+          document.getElementById("container").style.display = "none";
         }
       }
     );
   });
-}
-
-function activate() {
-  document.getElementById("invalid").style.display = "none";
-}
-
-function hide() {
-  document.getElementById("container").style.display = "none";
 }

@@ -1,0 +1,28 @@
+#options-container {
+  display: grid;
+  column-gap: 32px;
+}
+#options-container div {
+  display: flex;
+  align-items: center;
+  column-gap: 16px;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+#options-container div .button {
+  width: 50%;
+  cursor: default;
+}
+
+#options-container div .button:hover {
+  cursor: default;
+}
+
+#options-container div input {
+  width: 16px;
+  height: 16px;
+}
+
+#options-container div input:not(:checked) ~ .button {
+  opacity: 0.5;
+}
