@@ -3,7 +3,7 @@
   "description": "Awesome Extension that makes managing Content Hub easier!",
   "version": "1.0",
   "manifest_version": 3,
-  "permissions": [ "activeTab", "scripting", "tabs" ],
+  "permissions": [ "activeTab", "scripting" ],
   "action": {
     "default_popup": "index.html",
     "default_icon": {
