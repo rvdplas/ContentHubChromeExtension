@@ -32,6 +32,12 @@ export function createTab(url) {
   chrome.tabs.create({ url });
 }
 
+export function addClickEvent(elementId, callback) {
+  const element = document.getElementById(elementId);
+  if (!element) throw new Error(`element with id "${id}" not found`);
+  element.addEventListener("click", callback);
+}
+
 // function navigateToContentHubPage(path) {
 //   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
 //     var url = extractCurrentUrlOfTab(tabs[0], path);
