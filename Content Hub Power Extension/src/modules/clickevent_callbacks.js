@@ -4,6 +4,7 @@ import {
   replaceTemplate,
   isEmpty,
 } from "./helpers.js";
+import { PATHS } from "../data/paths.js";
 
 export function goToCustomPath(path, location) {
   return createTab(replaceTemplate(path, [["origin", location.origin]]));
@@ -15,7 +16,7 @@ export function goToEntity(path, location) {
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.APIENTITY, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITY, args));
 }
 
 // redirects to api/entities
@@ -24,7 +25,7 @@ export function goToAsset(path, location) {
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.APIASSET, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.APIASSET, args));
 }
 
 // ask for id and redirect to api/entities
@@ -38,7 +39,7 @@ export function goToEntityById(path, location) {
     ["origin", location.origin],
     ["entityId", entityId],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.APIENTITY, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITY, args));
 }
 
 // ask for id and redirect to api/entities
@@ -52,7 +53,7 @@ export function goToEntityByIdentifier(path, location) {
     ["origin", location.origin],
     ["entityIdentifier", entityIdentifier],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.APIENTITYIDENTIFIER, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITYIDENTIFIER, args));
 }
 
 // ask for id and redirect to api/datasources
@@ -66,7 +67,7 @@ export function goToOptionList(path, location) {
     ["origin", location.origin],
     ["datasource", datasource],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.OPTIONLIST, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.OPTIONLIST, args));
 }
 
 // asks for entity id and redirects to entity management
@@ -80,7 +81,7 @@ export function goToEntityMgmtById(path, location) {
     ["origin", location.origin],
     ["entityId", entityId],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.ENTITYMGMT, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYMGMT, args));
 }
 
 // asks for message id and redirects to entity management
@@ -94,7 +95,7 @@ export function goToMessageMgmtById(path, location) {
     ["origin", location.origin],
     ["entityId", entityId],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.MESSAGEMGMT, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.MESSAGEMGMT, args));
 }
 
 // asks for definition name and redirects to api/definition
@@ -108,7 +109,7 @@ export function goToEntityDefinition(path, location) {
     ["origin", location.origin],
     ["definition", definitionName],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.ENTITYDEFINITION, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYDEFINITION, args));
 }
 
 // redirect to current entity management
@@ -117,7 +118,7 @@ export function goToEntityMgmt(path, location) {
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.ENTITYMGMT, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYMGMT, args));
 }
 
 // redirects to api/entities
@@ -126,5 +127,5 @@ export function goToQueues(path, location) {
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
-  createTab(replaceTemplate(CONSTANTS.PATH.QUEUES, args));
+  createTab(replaceTemplate(PATHS.DEFAULT.QUEUES, args));
 }
