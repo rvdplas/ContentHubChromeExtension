@@ -1,4 +1,9 @@
-import { createTab, getLastSegment, replaceTemplate } from "./helpers.js";
+import {
+  createTab,
+  getLastSegment,
+  replaceTemplate,
+  isEmpty,
+} from "./helpers.js";
 
 export function goToCustomPath(path, location) {
   return createTab(replaceTemplate(path, [["origin", location.origin]]));
