@@ -1,130 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="style.css">
-
-    <script type="text/javascript" src="./js/app.js"></script>
-    <script type="text/javascript" src="./js/helpers.js"></script>
+    <meta charset="utf-8" />
+    <title>Content Hub Power Extension</title>
+    <link type="text/css" rel="stylesheet" href="./public/styles/global.css" />
+    <script type="module" src="./src/pages/index.js"></script>
 </head>
 <body>
+    <header>
+        <img src="./public/images/logo.png" alt="logo" width="220" height="49" />
+        <a href="./options.html">
+            <img src="./public/images/menu.png"
+                 alt="settings"
+                 width="25"
+                 height="25"
+                 class="lower" />
+        </a>
+    </header>
 
-    <div class="logo">
-        <img id="logo" alt="Logo" src="images/logo.png" />
-    </div>
-
-    <div class="invalid" id="invalid">
-        This extension only works for Content Hub websites
-    </div>
+    <div id="invalid">This extension only works for Content Hub websites</div>
 
     <div id="container">
-        <div style="float: left;">
-            <table>
-                <tr id="actions" class="link">
-                    <td class="image"><img alt="actions" src="images/actions.png" /></td>
-                    <td class="text">Actions</td>
-                </tr>
-
-                <tr id="media_processing" class="link">
-                    <td class="image"><img alt="Media processing" src="images/media_processing.png" /></td>
-                    <td class="text">Media processing</td>
-
-                </tr>
-
-                <tr id="pages" class="link">
-                    <td class="image"><img alt="Pages" src="images/pages.png" /></td>
-                    <td class="text">Pages</td>
-                </tr>
-
-                <tr id="assetDetailPage" class="link">
-                    <td class="image"><img alt="Pages" src="images/custom_pages.png" /></td>
-                    <td class="text">Asset detail Page</td>
-                </tr>
-
-                <tr id="schema" class="link">
-                    <td class="image"><img alt="Schema" src="images/schema.png" /></td>
-                    <td class="text">Schema</td>
-                </tr>
-
-                <tr id="m_asset" class="link">
-                    <td class="image"><img alt="Schema" src="images/custom_schema.png" /></td>
-                    <td class="text">M.Asset</td>
-                </tr>
-
-                <tr id="scripts" class="link">
-                    <td class="image"><img alt="Scripts" src="images/scripts.png" /></td>
-                    <td class="text">Scripts</td>
-                </tr>
-
-                <tr id="settings" class="link">
-                    <td class="image"><img alt="Settings" src="images/settings.png" /></td>
-                    <td class="text">Settings</td>
-                </tr>
-
-                <tr id="taxonomy" class="link">
-                    <td class="image"><img alt="taxonomy" src="images/taxonomy.png" /></td>
-                    <td class="text">Taxonomy</td>
-                </tr>
-
-                <tr id="themes" class="link">
-                    <td class="image"><img alt="Schema" src="images/themes.png" /></td>
-                    <td class="text">Themes</td>
-                </tr>
-
-                <tr id="triggers" class="link">
-                    <td class="image"><img alt="Schema" src="images/triggers.png" /></td>
-                    <td class="text">Triggers</td>
-                </tr>
-            </table>
-        </div>
-
-        <div style="float: right;">
-            <table>
-                <tr>
-                    <td>
-                        <button id="api-entity" class="button">API - Entity</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="api-entity-id" class="button">API - Entity By ID</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="api-entity-identifier" class="button">Entity By Identifier</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="entity-definition" class="button">Entity Definition By Name</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="option-list" class="button">Option List By Name</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="entitymngmt" class="button">EntityManagement</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="entitymngmt-id" class="button">EntityManagement By ID</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="messagemngmt-id" class="button">Message By ID</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id="queues" class="button">Message Queues</button>
-                    </td>
-                </tr>
-            </table>
+        <div>
+            <button id="api-entity">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity</span>
+            </button>
+            <button id="api-entity-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity By ID</span>
+            </button>
+            <button id="api-entity-identifier">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity By Identifier</span>
+            </button>
+            <button id="entity-definition">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Definition By Name</span>
+            </button>
+            <button id="option-list">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Option List By Name</span>
+            </button>
+            <button id="entitymngmt">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Management</span>
+            </button>
+            <button id="entitymngmt-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Management By ID</span>
+            </button>
+            <button id="messagemngmt-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Message By ID</span>
+            </button>
+            <button id="queues">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Message Queues</span>
+            </button>
         </div>
     </div>
 </body>
