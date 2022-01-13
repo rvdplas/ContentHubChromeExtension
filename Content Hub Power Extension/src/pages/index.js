@@ -86,24 +86,12 @@ function addClickEvents(buttons) {
 
   addClickEvent("api-entity", createClickEventContext(null, goToEntity));
   addClickEvent("api-entity-id", createClickEventContext(null, goToEntityById));
-  addClickEvent(
-    "api-entity-identifier",
-    createClickEventContext(null, goToEntityByIdentifier)
-  );
+  addClickEvent("api-entity-identifier", createClickEventContext(null, goToEntityByIdentifier));
   addClickEvent("entitymngmt", createClickEventContext(null, goToEntityMgmt));
-  addClickEvent(
-    "entitymngmt-id",
-    createClickEventContext(null, goToEntityMgmtById)
-  );
-  addClickEvent(
-    "entity-definition",
-    createClickEventContext(null, goToEntityDefinition)
-  );
+  addClickEvent("entitymngmt-id", createClickEventContext(null, goToEntityMgmtById));
+  addClickEvent("entity-definition", createClickEventContext(null, goToEntityDefinition));
   addClickEvent("option-list", createClickEventContext(null, goToOptionList));
-  addClickEvent(
-    "messagemngmt-id",
-    createClickEventContext(null, goToMessageMgmtById)
-  );
+  addClickEvent("messagemngmt-id", createClickEventContext(null, goToMessageMgmtById));
   addClickEvent("queues", createClickEventContext(null, goToQueues));
 }
 

@@ -63,3 +63,7 @@ button:hover {
   background: #f4ff81;
   color: #000;
 }
+
+.lower {
+    padding-top: 15px;
+}

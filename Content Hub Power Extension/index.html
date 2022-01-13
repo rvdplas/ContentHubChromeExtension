@@ -1,38 +1,64 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8" />
     <title>Content Hub Power Extension</title>
     <link type="text/css" rel="stylesheet" href="./public/styles/global.css" />
     <script type="module" src="./src/pages/index.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <img src="./public/images/logo.png" alt="logo" width="220" height="49" />
-      <a href="./options.html">
-        <img
-          src="./public/images/settings.png"
-          alt="settings"
-          width="40"
-          height="40"
-        />
-      </a>
+        <img src="./public/images/logo.png" alt="logo" width="220" height="49" />
+        <a href="./options.html">
+            <img src="./public/images/menu.png"
+                 alt="settings"
+                 width="25"
+                 height="25"
+                 class="lower" />
+        </a>
     </header>
 
     <div id="invalid">This extension only works for Content Hub websites</div>
 
     <div id="container">
-      <div>
-        <button id="api-entity">API - Entity</button>
-        <button id="api-entity-id">API - Entity By ID</button>
-        <button id="api-entity-identifier">API - Entity By Identifier</button>
-        <button id="entity-definition">API - Entity Definition By Name</button>
-        <button id="option-list">API - Option List By Name</button>
-        <button id="entitymngmt">API - Entity Management</button>
-        <button id="entitymngmt-id">API - Entity Management By ID</button>
-        <button id="messagemngmt-id">API - Message By ID</button>
-        <button id="queues">API - Message Queues</button>
-      </div>
+        <div>
+            <button id="api-entity">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity</span>
+            </button>
+            <button id="api-entity-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity By ID</span>
+            </button>
+            <button id="api-entity-identifier">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity By Identifier</span>
+            </button>
+            <button id="entity-definition">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Definition By Name</span>
+            </button>
+            <button id="option-list">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Option List By Name</span>
+            </button>
+            <button id="entitymngmt">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Management</span>
+            </button>
+            <button id="entitymngmt-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Entity Management By ID</span>
+            </button>
+            <button id="messagemngmt-id">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Message By ID</span>
+            </button>
+            <button id="queues">
+                <img alt="actions" src="./public/images/api.png">
+                <span>Message Queues</span>
+            </button>
+        </div>
     </div>
-  </body>
+</body>
 </html>

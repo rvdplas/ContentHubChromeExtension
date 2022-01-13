@@ -40,3 +40,7 @@
   align-items: center;
   gap: 6px;
 }
+
+a {
+    color: white;
+}
