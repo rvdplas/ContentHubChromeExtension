@@ -1,7 +1,7 @@
 {
   "name": "Content Hub Power Extension",
   "description": "Awesome extension that makes managing Content Hub easier!",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "permissions": [ "scripting", "tabs", "storage" ],
   "options_ui": {
