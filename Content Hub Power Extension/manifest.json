@@ -3,7 +3,7 @@
   "description": "Awesome extension that makes managing Content Hub easier!",
   "version": "1.1",
   "manifest_version": 3,
-  "permissions": [ "scripting", "tabs", "storage" ],
+  "permissions": ["scripting", "tabs", "storage"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": false
