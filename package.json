@@ -1,0 +1,19 @@
+{
+  "name": "content-hub-power-extension",
+  "version": "1.0.0",
+  "description": "Provides shortcuts to most used Content Hub pages",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvdplas/ContentHubChromeExtension.git"
+  },
+  "author": "Yvo Geldhof & Ronald van der Plas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvdplas/ContentHubChromeExtension/issues"
+  },
+  "homepage": "https://github.com/rvdplas/ContentHubChromeExtension#readme",
+  "devDependencies": {
+    "eslint": "^8.9.0"
+  }
+}

@@ -29,12 +29,12 @@ export function isEmpty(str) {
 
 // create new tab and redirect to url
 export function createTab(url) {
-  chrome.tabs.create({ url });
+  window.chrome.tabs.create({ url });
 }
 
 export function addClickEvent(elementId, callback) {
   const element = document.getElementById(elementId);
-  if (!element) throw new Error(`element with id "${id}" not found`);
+  if (!element) throw new Error(`element with id "${elementId}" not found`);
   element.addEventListener("click", callback);
 }
 

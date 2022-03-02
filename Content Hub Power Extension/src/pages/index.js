@@ -11,13 +11,13 @@ import {
   goToOptionList,
   goToQueues,
 } from "../modules/clickevent_callbacks.js";
-import { createPromise, addClickEvent } from "../modules/helpers.js";
-import {
-  parseCustomButtonTemplates,
-  createCustomButtonTemplate,
-} from "../modules/custom_button.js";
-import { setScreenState } from "../modules/screen.js";
 import { dataKey, tryGetConfig } from "../modules/configuration.js";
+import {
+  createCustomButtonTemplate,
+  parseCustomButtonTemplates,
+} from "../modules/custom_button.js";
+import { addClickEvent, createPromise } from "../modules/helpers.js";
+import { setScreenState } from "../modules/screen.js";
 
 function initialize() {
   setScreenState();
@@ -37,16 +37,23 @@ function initialize() {
 
 function getCurrentTab() {
   return createPromise((resolve, reject) => {
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-      resolve(tabs[0]);
-    });
+    window.chrome.tabs.query(
+      { active: true, lastFocusedWindow: true },
+      (tabs) => {
+        if (!tabs.length) reject("Current tab was not found");
+        resolve(tabs[0]);
+      }
+    );
   });
 }
 
 function createAnchorElementFromTabUrl(tab) {
   return createPromise((resolve, reject) => {
+    if (!tab.url) reject(new Error("Tab url was not found"));
+
     const anchorElement = document.createElement("a");
     anchorElement.href = tab.url;
+
     resolve(anchorElement);
   });
 }
@@ -86,12 +93,24 @@ function addClickEvents(buttons) {
 
   addClickEvent("api-entity", createClickEventContext(null, goToEntity));
   addClickEvent("api-entity-id", createClickEventContext(null, goToEntityById));
-  addClickEvent("api-entity-identifier", createClickEventContext(null, goToEntityByIdentifier));
+  addClickEvent(
+    "api-entity-identifier",
+    createClickEventContext(null, goToEntityByIdentifier)
+  );
   addClickEvent("entitymngmt", createClickEventContext(null, goToEntityMgmt));
-  addClickEvent("entitymngmt-id", createClickEventContext(null, goToEntityMgmtById));
-  addClickEvent("entity-definition", createClickEventContext(null, goToEntityDefinition));
+  addClickEvent(
+    "entitymngmt-id",
+    createClickEventContext(null, goToEntityMgmtById)
+  );
+  addClickEvent(
+    "entity-definition",
+    createClickEventContext(null, goToEntityDefinition)
+  );
   addClickEvent("option-list", createClickEventContext(null, goToOptionList));
-  addClickEvent("messagemngmt-id", createClickEventContext(null, goToMessageMgmtById));
+  addClickEvent(
+    "messagemngmt-id",
+    createClickEventContext(null, goToMessageMgmtById)
+  );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
 }
 

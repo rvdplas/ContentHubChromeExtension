@@ -1,8 +1,6 @@
 export function createCheckboxTemplate(checkboxData) {
   const { elementId, image, text, checked } = checkboxData;
 
-  console.log(checked);
-
   return `
     <div>
         <input type='checkbox' name="${elementId}" id="${elementId}" 
