@@ -22,5 +22,11 @@
     "32": "./public/images/get_started32.png",
     "48": "./public/images/get_started48.png",
     "128": "./public/images/get_started128.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ]
 }
