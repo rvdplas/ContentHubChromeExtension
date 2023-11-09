@@ -18,6 +18,7 @@ export const PATHS = {
     Schema: "{origin}/en-us/admin/definitionmgmt",
     Scripts: "{origin}/en-us/admin/scripts",
     Settings: "{origin}/en-us/admin/settingmanagement",
+    SettingsPost: "{origin}/api/entities",
     Taxonomy: "{origin}/en-us/admin/taxonomy",
     Themes: "{origin}/en-us/admin/thememgmt",
     Triggers: "{origin}/en-us/admin/triggers",

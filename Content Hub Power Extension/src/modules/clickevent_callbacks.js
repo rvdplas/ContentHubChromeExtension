@@ -129,3 +129,64 @@ export function goToQueues(path, location) {
   ];
   createTab(replaceTemplate(PATHS.DEFAULT.QUEUES, args));
 }
+
+// sends POST request to Settings
+export function sendPostRequestToSettings(path, location) {
+  let settingCategoryId = prompt("Enter SettingCategoryId");
+  if (isEmpty(settingCategoryId)) {
+    alert("You haven't specified SettingCategoryId");
+    return;
+  }
+  let settingName = prompt("Enter SettingName");
+  if (isEmpty(settingName)) {
+    alert("You haven't specified SettingName");
+    return;
+  }
+  let settingLabel = prompt("Enter SettingLabel");
+  if (isEmpty(settingLabel)) {
+    alert("You haven't specified SettingLabel");
+    return;
+  }
+  let args = [
+    ["origin", location.origin],
+  ];
+  const jsonData = {};
+  jsonData.id = -1;
+  jsonData.entitydefinition = {
+    href: `${location.origin}/api/entitydefinitions/M.Setting`,
+    templated: false
+  };
+  jsonData.cultures = ["en-US"];
+  jsonData.relations = {
+    SettingCategoryToSettings: {
+      inheritsSecurity: true,
+      parent: {
+        templated: false,
+        href: `${location.origin}/api/entities/${settingCategoryId}`
+      },
+      self: {
+        templated: false,
+        href: `${location.origin}/api/entities/-1/relations/SettingCategoryToSettings?id=-1&name=SettingCategoryToSettings`
+      }
+    }
+  };
+  jsonData.properties = {
+    "M.Setting.Name": `${settingName}`,
+    "M.Setting.Label": {
+      "en-US": `${settingLabel}`
+    },
+    "M.Setting.Value": {},
+    //"M.Setting.EnvironmentSpecific": true
+  };
+  jsonData.renditions = {};
+  jsonData.self = {
+    href: `${location.origin}/api/entities/-1`,
+    templated: false,
+  }
+
+  // fetch API function is used in content-script.js
+  chrome.tabs.sendMessage(Number(location.tabId),
+    {url: replaceTemplate(PATHS.CUSTOM.SettingsPost, args), jsonData: JSON.stringify(jsonData)}
+  );
+}
+
