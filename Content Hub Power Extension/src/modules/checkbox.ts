@@ -1,13 +1,13 @@
 export function createCheckboxTemplate(checkboxData) {
-  const { elementId, image, text, checked } = checkboxData;
-
+  const { elementId, iconClass, iconColor, text, checked } = checkboxData;
+  
   return `
     <div>
         <input type='checkbox' name="${elementId}" id="${elementId}" 
         ${checked ? "checked" : ""} />
         <label for="${elementId}">
-            <img src="${image}" alt="${text}" width="24" height="24" />
-            ${text} 
+            <span class="icon ${iconClass}" style="background-color: ${iconColor};" aria-hidden="true"></span>
+            ${text}
         </label>
     </div>
     `;

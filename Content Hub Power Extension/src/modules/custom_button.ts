@@ -1,9 +1,9 @@
 export function createCustomButtonTemplate(buttonData) {
-  const { elementId, image, text } = buttonData;
-
+  const { elementId, iconClass, iconColor, text } = buttonData;
+  
   return `
         <button id="${elementId}">
-          <img alt="${elementId}" src="${image}" />
+          <span class="icon ${iconClass}" style="background-color: ${iconColor};" aria-hidden="true"></span>
           <span>${text}</span>
         </button>
       `;

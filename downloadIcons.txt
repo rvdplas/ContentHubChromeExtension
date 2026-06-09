@@ -1,0 +1,95 @@
+1. Login into Content Hub
+2. Go to the management page.
+3. Open the browser console
+4. Paste the code below
+5. Run it to list and download icons from the Content Hub. 
+
+You can adjust the range in `downloadContentHubIconRange` calls to download different sets of icons.
+Be sure to use a max of 10 icons per range to avoid overwhelming the browser with download prompts.
+Allow the browser for multiple downloads if prompted.
+
+
+
+(() => {
+  const allIcons = [...document.querySelectorAll("#icons-wrapper g[id^='content-hub-icon-']")]
+    .filter(g => g.querySelector("path"));
+
+  const icons = [...new Map(allIcons.map(icon => [icon.id, icon])).values()];
+
+  function createSvg(icon) {
+    const parentSvg = icon.closest("svg");
+    const viewBox = parentSvg?.getAttribute("viewBox") || "0 0 24 24";
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">
+${icon.innerHTML.trim()}
+</svg>`;
+  }
+
+  function downloadIcon(icon) {
+    const svg = createSvg(icon);
+    const blob = new Blob([svg], { type: "image/svg+xml" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${icon.id}.svg`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  window.listContentHubIcons = function () {
+    console.log(`Found ${icons.length} unique icons.`);
+    console.table(icons.map((icon, index) => ({
+      index,
+      fileName: `${icon.id}.svg`,
+      id: icon.id
+    })));
+  };
+
+  window.downloadContentHubIcon = function (index) {
+    const icon = icons[index];
+
+    if (!icon) {
+      console.error(`No icon found at index ${index}`);
+      return;
+    }
+
+    console.log(`Downloading index ${index}: ${icon.id}`);
+    downloadIcon(icon);
+  };
+
+  window.downloadContentHubIconRange = async function (startIndex, endIndex) {
+    const selection = icons.slice(startIndex, endIndex + 1);
+
+    if (!selection.length) {
+      console.error(`No icons found in range ${startIndex}-${endIndex}`);
+      return;
+    }
+
+    console.log(`Downloading icons ${startIndex} to ${endIndex}`);
+    console.table(selection.map((icon, offset) => ({
+      index: startIndex + offset,
+      fileName: `${icon.id}.svg`
+    })));
+
+    for (const icon of selection) {
+      downloadIcon(icon);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    console.log(`Done. Downloaded ${selection.length} icons.`);
+  };
+
+  console.log(`Ready. Found ${icons.length} icons.`);
+  console.log("Run: listContentHubIcons()");
+  console.log("Run: downloadContentHubIcon(0)");
+  console.log("Run: downloadContentHubIconRange(0, 9)");
+})();
+downloadContentHubIconRange(0, 9)
+downloadContentHubIconRange(10, 19)
+downloadContentHubIconRange(20, 29)
+downloadContentHubIconRange(30, 39)
+downloadContentHubIconRange(40, 49)
