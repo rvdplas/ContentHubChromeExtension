@@ -4,14 +4,11 @@ import {
   parseCheckboxTemplates,
 } from "../modules/checkbox.js";
 import { addClickEvent } from "../modules/helpers.js";
-import { setScreenState } from "../modules/screen.js";
 import { dataKey, saveConfig, tryGetConfig } from "../modules/configuration.js";
 
 let config = {};
 
 function initialize() {
-  setScreenState();
-
   tryGetConfig(dataKey, (data) => {
     config = data[dataKey] ?? {};
 

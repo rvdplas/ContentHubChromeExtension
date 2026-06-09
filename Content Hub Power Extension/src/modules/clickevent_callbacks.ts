@@ -150,7 +150,7 @@ export function sendPostRequestToSettings(path, location) {
   let args = [
     ["origin", location.origin],
   ];
-  const jsonData = {};
+  const jsonData: any = {};
   jsonData.id = -1;
   jsonData.entitydefinition = {
     href: `${location.origin}/api/entitydefinitions/M.Setting`,

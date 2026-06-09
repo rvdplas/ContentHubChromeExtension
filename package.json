@@ -2,7 +2,12 @@
   "name": "content-hub-power-extension",
   "version": "1.0.0",
   "description": "Provides shortcuts to most used Content Hub pages",
-  "scripts": {},
+  "scripts": {
+    "build": "node scripts/build.js",
+    "clean": "node scripts/build.js clean",
+    "dev": "npm run build && node scripts/watch.js",
+    "watch": "node scripts/watch.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rvdplas/ContentHubChromeExtension.git"
@@ -14,6 +19,8 @@
   },
   "homepage": "https://github.com/rvdplas/ContentHubChromeExtension#readme",
   "devDependencies": {
-    "eslint": "^8.9.0"
+    "@types/chrome": "^0.0.210",
+    "eslint": "^8.9.0",
+    "typescript": "^5.6.0"
   }
 }

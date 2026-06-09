@@ -18,10 +18,8 @@ import {
   parseCustomButtonTemplates,
 } from "../modules/custom_button.js";
 import { addClickEvent, createPromise } from "../modules/helpers.js";
-import { setScreenState } from "../modules/screen.js";
 
 function initialize() {
-  setScreenState();
 
   tryGetConfig(dataKey, (data) => {
     const config = data[dataKey] ?? {};
@@ -52,7 +50,10 @@ function createAnchorElementFromTabUrl(tab) {
   return createPromise((resolve, reject) => {
     if (!tab.url) reject(new Error("Tab url was not found"));
 
-    const anchorElement = document.createElement("a");
+    const anchorElement = document.createElement("a") as HTMLAnchorElement & {
+      tabId?: number;
+    };
+
     anchorElement.href = tab.url;
     anchorElement.tabId = tab.id;
 
