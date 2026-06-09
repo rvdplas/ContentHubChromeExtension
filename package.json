@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Provides shortcuts to most used Content Hub pages",
   "scripts": {
-    "build": "node scripts/build.js",
-    "clean": "node scripts/build.js clean",
-    "dev": "npm run build && node scripts/watch.js",
-    "watch": "node scripts/watch.js"
+    "build": "npx ts-node --project tsconfig.scripts.json scripts/build.ts",
+    "clean": "npx ts-node --project tsconfig.scripts.json scripts/build.ts clean",
+    "dev": "npm run build && npx ts-node --project tsconfig.scripts.json scripts/watch.ts",
+    "watch": "npx ts-node --project tsconfig.scripts.json scripts/watch.ts"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/chrome": "^0.0.210",
     "eslint": "^8.9.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.6.0"
   }
 }

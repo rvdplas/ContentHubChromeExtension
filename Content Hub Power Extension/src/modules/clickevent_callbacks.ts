@@ -6,13 +6,22 @@ import {
 } from "./helpers.js";
 import { PATHS } from "../data/paths.js";
 
-export function goToCustomPath(path, location) {
-  return createTab(replaceTemplate(path, [["origin", location.origin]]));
+type ClickEventLocation = {
+  origin: string;
+  href: string;
+  tabId?: number;
+};
+
+export function goToCustomPath(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  return createTab(replaceTemplate(path ?? "", [["origin", location.origin]]));
 }
 
 // redirects to api/entities
-export function goToEntity(path, location) {
-  let args = [
+export function goToEntity(path: string | null, location: ClickEventLocation) {
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
@@ -20,8 +29,8 @@ export function goToEntity(path, location) {
 }
 
 // redirects to api/entities
-export function goToAsset(path, location) {
-  let args = [
+export function goToAsset(path: string | null, location: ClickEventLocation) {
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
@@ -29,13 +38,16 @@ export function goToAsset(path, location) {
 }
 
 // ask for id and redirect to api/entities
-export function goToEntityById(path, location) {
+export function goToEntityById(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let entityId = prompt("Enter entity ID");
   if (isEmpty(entityId)) {
     alert("You haven't specified entity ID");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", entityId],
   ];
@@ -43,13 +55,16 @@ export function goToEntityById(path, location) {
 }
 
 // ask for id and redirect to api/entities
-export function goToEntityByIdentifier(path, location) {
+export function goToEntityByIdentifier(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let entityIdentifier = prompt("Enter entity Identifier");
   if (isEmpty(entityIdentifier)) {
     alert("You haven't specified entity Identifier");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityIdentifier", entityIdentifier],
   ];
@@ -57,13 +72,16 @@ export function goToEntityByIdentifier(path, location) {
 }
 
 // ask for id and redirect to api/datasources
-export function goToOptionList(path, location) {
+export function goToOptionList(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let datasource = prompt("Enter Option List name");
   if (isEmpty(datasource)) {
     alert("You haven't specified any Option List name");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["datasource", datasource],
   ];
@@ -71,13 +89,16 @@ export function goToOptionList(path, location) {
 }
 
 // asks for entity id and redirects to entity management
-export function goToEntityMgmtById(path, location) {
+export function goToEntityMgmtById(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let entityId = prompt("Enter entity ID");
   if (isEmpty(entityId)) {
     alert("You haven't specified entity ID");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", entityId],
   ];
@@ -85,13 +106,16 @@ export function goToEntityMgmtById(path, location) {
 }
 
 // asks for message id and redirects to entity management
-export function goToMessageMgmtById(path, location) {
+export function goToMessageMgmtById(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let entityId = prompt("Enter message ID");
   if (isEmpty(entityId)) {
     alert("You haven't specified message ID");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", entityId],
   ];
@@ -99,13 +123,16 @@ export function goToMessageMgmtById(path, location) {
 }
 
 // asks for definition name and redirects to api/definition
-export function goToEntityDefinition(path, location) {
+export function goToEntityDefinition(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let definitionName = prompt("Enter entity definition");
   if (isEmpty(definitionName)) {
     alert("You haven't specified entity definition name");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["definition", definitionName],
   ];
@@ -113,8 +140,11 @@ export function goToEntityDefinition(path, location) {
 }
 
 // redirect to current entity management
-export function goToEntityMgmt(path, location) {
-  let args = [
+export function goToEntityMgmt(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
@@ -122,8 +152,11 @@ export function goToEntityMgmt(path, location) {
 }
 
 // redirects to api/entities
-export function goToQueues(path, location) {
-  let args = [
+export function goToQueues(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  const args: [string, string | null][] = [
     ["origin", location.origin],
     ["entityId", getLastSegment(location.href)],
   ];
@@ -131,7 +164,10 @@ export function goToQueues(path, location) {
 }
 
 // sends POST request to Settings
-export function sendPostRequestToSettings(path, location) {
+export function sendPostRequestToSettings(
+  path: string | null,
+  location: ClickEventLocation
+) {
   let settingCategoryId = prompt("Enter SettingCategoryId");
   if (isEmpty(settingCategoryId)) {
     alert("You haven't specified SettingCategoryId");
@@ -147,7 +183,7 @@ export function sendPostRequestToSettings(path, location) {
     alert("You haven't specified SettingLabel");
     return;
   }
-  let args = [
+  const args: [string, string | null][] = [
     ["origin", location.origin],
   ];
   const jsonData: any = {};
@@ -176,7 +212,6 @@ export function sendPostRequestToSettings(path, location) {
       "en-US": `${settingLabel}`
     },
     "M.Setting.Value": {},
-    //"M.Setting.EnvironmentSpecific": true
   };
   jsonData.renditions = {};
   jsonData.self = {

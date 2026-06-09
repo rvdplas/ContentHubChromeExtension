@@ -45,6 +45,12 @@ button .icon,
   display: inline-block;
 }
 
+label .icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+}
+
 button .icon,
 .button .icon {
   background-color: currentColor;

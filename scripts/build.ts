@@ -1,39 +1,76 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+/// <reference types="node" />
+
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+
+type FileSnapshot = Map<string, number>;
+
+type ErrnoLike = { code?: string | number };
 
 const rootDir = path.resolve(__dirname, '..');
 const sourceDir = path.join(rootDir, 'Content Hub Power Extension');
 const outDir = path.join(rootDir, 'dist');
 
-function removeDir(dir) {
-  if (!fs.existsSync(dir)) return;
-  for (const entry of fs.readdirSync(dir)) {
-    const fullPath = path.join(dir, entry);
-    const stat = fs.statSync(fullPath);
-    if (stat.isDirectory()) {
-      removeDir(fullPath);
-    } else {
-      fs.unlinkSync(fullPath);
-    }
-  }
-  fs.rmdirSync(dir);
+function isENOENT(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as ErrnoLike).code === 'ENOENT'
+  );
 }
 
-function copyRecursive(src, dest) {
+function removeDir(dir: string): void {
+  if (!fs.existsSync(dir)) return;
+
+  for (const entry of fs.readdirSync(dir)) {
+    const fullPath = path.join(dir, entry);
+    let stat: fs.Stats;
+
+    try {
+      stat = fs.statSync(fullPath);
+    } catch (error: unknown) {
+      if (isENOENT(error)) continue;
+      throw error;
+    }
+
+    if (stat.isDirectory()) {
+      removeDir(fullPath);
+      continue;
+    }
+
+    try {
+      fs.unlinkSync(fullPath);
+    } catch (error: unknown) {
+      if (isENOENT(error)) continue;
+      throw error;
+    }
+  }
+
+  try {
+    fs.rmdirSync(dir);
+  } catch (error: unknown) {
+    if (isENOENT(error)) return;
+    throw error;
+  }
+}
+
+function copyRecursive(src: string, dest: string): void {
   const stat = fs.statSync(src);
   if (stat.isDirectory()) {
     fs.mkdirSync(dest, { recursive: true });
     for (const item of fs.readdirSync(src)) {
       copyRecursive(path.join(src, item), path.join(dest, item));
     }
-  } else {
-    if (path.extname(src) === '.ts') return;
-    fs.copyFileSync(src, dest);
+    return;
   }
+
+  if (path.extname(src) === '.ts') return;
+  fs.copyFileSync(src, dest);
 }
 
-const args = process.argv.slice(2);
+const args: string[] = process.argv.slice(2);
 if (args[0] === 'clean') {
   removeDir(outDir);
   process.exit(0);
@@ -53,7 +90,7 @@ try {
     cwd: rootDir,
   });
   console.log(`Built Chrome extension to ${outDir}`);
-} catch (error) {
+} catch (error: unknown) {
   console.error('TypeScript build failed.');
   process.exit(1);
 }

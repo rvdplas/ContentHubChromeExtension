@@ -1,4 +1,9 @@
-export function createPromise(func) {
+export function createPromise<T>(
+  func: (
+    resolve: (value: T | PromiseLike<T>) => void,
+    reject: (reason?: unknown) => void
+  ) => void
+): Promise<T> {
   return new Promise((resolve, reject) => {
     try {
       func(resolve, reject);
@@ -9,93 +14,40 @@ export function createPromise(func) {
 }
 
 // get last segment from url
-export function getLastSegment(url) {
+export function getLastSegment(url: string): string {
   return url.substr(url.lastIndexOf("/") + 1);
 }
 
 // replace placeholder in string from two-dimension array
-export function replaceTemplate(template, args) {
-  args.forEach(function (element) {
-    template = template.replace("{" + element[0] + "}", element[1]);
-  }, this);
+export function replaceTemplate(
+  template: string,
+  args: [string, string | null][]
+): string {
+  args.forEach((element) => {
+    template = template.replace(
+      "{" + element[0] + "}",
+      String(element[1])
+    );
+  });
 
   return template;
 }
 
 // check if string is empty
-export function isEmpty(str) {
+export function isEmpty(str: string | null | undefined): boolean {
   return !str || str.length === 0;
 }
 
 // create new tab and redirect to url
-export function createTab(url) {
+export function createTab(url: string): void {
   window.chrome.tabs.create({ url });
 }
 
-export function addClickEvent(elementId, callback) {
+export function addClickEvent(
+  elementId: string,
+  callback: (event: Event) => void
+): void {
   const element = document.getElementById(elementId);
   if (!element) throw new Error(`element with id "${elementId}" not found`);
   element.addEventListener("click", callback);
 }
-
-// function navigateToContentHubPage(path) {
-//   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-//     var url = extractCurrentUrlOfTab(tabs[0], path);
-//     createTab(url);
-//   });
-// }
-
-// function navigateTemplateEntityId(template) {
-//   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-//     // get url of tab
-//     chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-//       let origin = new URL(tabs[0].url).origin;
-//       let entityId = getLastSegment(tabs[0].url);
-//       var path = template.replace("{entityId}", entityId);
-
-//       createTab(combineUrls(origin, path));
-//     });
-//   });
-// }
-
-// function extractCurrentUrlOfTab(tab, path) {
-//   let origin = new URL(tab.url).origin;
-//   return combineUrls(origin, path);
-// }
-
-// function combineUrls(origin, path) {
-//   return new URL(path, origin).toString();
-// }
-
-// ### Sitecore code
-
-// //send request to url with specified type
-// function SendRequest(url, type) {
-//   var xhr = new XMLHttpRequest();
-//   xhr.open(type, url, false);
-//   xhr.send();
-// }
-
-// //close extension
-// function Exit() {
-//   window.close();
-// }
-
-// //refresh pages in some weird way
-// function RefreshPage(tabId) {
-//   chrome.tabs.executeScript(tabId, { code: "window.location.reload();" });
-// }
-
-// clear cache
-// function ClearCache(location) {
-//   var args = [["origin", location.origin]];
-//   SendRequest(Replace(CONSTANTS.PATH.CLEARCACHE, args), "DELETE");
-//   SendRequest(Replace(CONSTANTS.PATH.INITSEARCH, args), "POST");
-// }
-
-// clear cache and reload the page
-// function ClearCacheAndReload(location, tabId) {
-//   ClearCache(location);
-//   RefreshPage(tabId);
-//   Exit();
-// }

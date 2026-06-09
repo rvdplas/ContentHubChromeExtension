@@ -6,11 +6,13 @@ import {
 import { addClickEvent } from "../modules/helpers.js";
 import { dataKey, saveConfig, tryGetConfig } from "../modules/configuration.js";
 
-let config = {};
+type SavedConfig = Record<string, { id: string; inactive: boolean }>;
 
-function initialize() {
-  tryGetConfig(dataKey, (data) => {
-    config = data[dataKey] ?? {};
+let config: SavedConfig = {};
+
+function initialize(): void {
+  tryGetConfig(dataKey, (data: Record<string, unknown>) => {
+    config = (data[dataKey] as SavedConfig) ?? {};
 
     renderCheckboxes();
 
@@ -20,8 +22,8 @@ function initialize() {
   });
 }
 
-function onCheckboxClick(e) {
-  const element = e.target;
+function onCheckboxClick(e: Event): void {
+  const element = e.target as HTMLInputElement;
   const isChecked = element.checked;
   const id = element.id;
 
@@ -51,7 +53,10 @@ function renderCheckboxes() {
 
   const elements = parseCheckboxTemplates(elementTemplates);
 
-  document.getElementById("container").prepend(elements);
+  const container = document.getElementById("container");
+  if (container && elements) {
+    container.prepend(elements);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());

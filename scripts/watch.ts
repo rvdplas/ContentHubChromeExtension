@@ -1,18 +1,18 @@
-const fs = require('fs');
-const path = require('path');
-const { spawn } = require('child_process');
+import fs from 'fs';
+import path from 'path';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 const rootDir = path.resolve(__dirname, '..');
 const watchDir = path.join(rootDir, 'Content Hub Power Extension');
 const debounceDelay = 250;
 const pollIntervalMs = 500;
-let rebuildTimer = null;
+let rebuildTimer: NodeJS.Timeout | null = null;
 let buildRunning = false;
 let pendingRun = false;
-let pollTimer = null;
-let previousSnapshot = new Map();
+let pollTimer: NodeJS.Timeout | null = null;
+let previousSnapshot: Map<string, number> = new Map();
 
-function runBuild() {
+function runBuild(): void {
   if (buildRunning) {
     pendingRun = true;
     return;
@@ -21,12 +21,21 @@ function runBuild() {
   buildRunning = true;
   console.log('Rebuilding extension...');
 
-  const build = spawn('node', ['scripts/build.js'], {
-    cwd: rootDir,
-    stdio: 'inherit',
-  });
+  const build = spawn(
+    'npx',
+    [
+      'ts-node',
+      '--project',
+      path.join(rootDir, 'tsconfig.scripts.json'),
+      'scripts/build.ts',
+    ],
+    {
+      cwd: rootDir,
+      stdio: 'inherit',
+    }
+  );
 
-  build.on('exit', (code) => {
+  build.on('exit', (code: number | null) => {
     buildRunning = false;
     if (code !== 0) {
       console.error(`Build exited with code ${code}`);
@@ -41,12 +50,14 @@ function runBuild() {
   });
 }
 
-function scheduleBuild() {
-  clearTimeout(rebuildTimer);
+function scheduleBuild(): void {
+  if (rebuildTimer !== null) {
+    clearTimeout(rebuildTimer);
+  }
   rebuildTimer = setTimeout(runBuild, debounceDelay);
 }
 
-function isWatchableFile(filename) {
+function isWatchableFile(filename: string): boolean {
   return [
     '.ts',
     '.js',
@@ -60,8 +71,8 @@ function isWatchableFile(filename) {
   ].includes(path.extname(filename).toLowerCase());
 }
 
-function scanDirectory(dir, snapshot) {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
+function scanDirectory(dir: string, snapshot: Map<string, number>): void {
+  const entries: fs.Dirent[] = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
 
@@ -77,13 +88,16 @@ function scanDirectory(dir, snapshot) {
   }
 }
 
-function createSnapshot() {
-  const snapshot = new Map();
+function createSnapshot(): Map<string, number> {
+  const snapshot = new Map<string, number>();
   scanDirectory(watchDir, snapshot);
   return snapshot;
 }
 
-function snapshotsDiffer(oldSnapshot, newSnapshot) {
+function snapshotsDiffer(
+  oldSnapshot: Map<string, number>,
+  newSnapshot: Map<string, number>
+): boolean {
   if (oldSnapshot.size !== newSnapshot.size) return true;
 
   for (const [filePath, mtime] of newSnapshot.entries()) {
@@ -95,7 +109,7 @@ function snapshotsDiffer(oldSnapshot, newSnapshot) {
   return false;
 }
 
-function pollForChanges() {
+function pollForChanges(): void {
   try {
     const currentSnapshot = createSnapshot();
     if (snapshotsDiffer(previousSnapshot, currentSnapshot)) {
@@ -107,12 +121,12 @@ function pollForChanges() {
   }
 }
 
-function startPolling() {
+function startPolling(): void {
   previousSnapshot = createSnapshot();
   pollTimer = setInterval(pollForChanges, pollIntervalMs);
 }
 
-function stopPolling() {
+function stopPolling(): void {
   if (pollTimer !== null) {
     clearInterval(pollTimer);
     pollTimer = null;

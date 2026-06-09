@@ -1,6 +1,13 @@
-export function createCustomButtonTemplate(buttonData) {
+export interface CustomButtonData {
+  elementId: string;
+  iconClass: string;
+  iconColor: string;
+  text: string;
+}
+
+export function createCustomButtonTemplate(buttonData: CustomButtonData): string {
   const { elementId, iconClass, iconColor, text } = buttonData;
-  
+
   return `
         <button id="${elementId}">
           <span class="icon ${iconClass}" style="background-color: ${iconColor};" aria-hidden="true"></span>
@@ -9,7 +16,9 @@ export function createCustomButtonTemplate(buttonData) {
       `;
 }
 
-export function parseCustomButtonTemplates(buttonTemplates) {
+export function parseCustomButtonTemplates(
+  buttonTemplates: string
+): HTMLElement | null {
   const buttonsTemplate = `
     <div id="custom-buttons-container">
         ${buttonTemplates}

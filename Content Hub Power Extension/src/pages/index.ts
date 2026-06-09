@@ -10,7 +10,6 @@ import {
   goToMessageMgmtById,
   goToOptionList,
   goToQueues,
-  sendPostRequestToSettings,
 } from "../modules/clickevent_callbacks.js";
 import { dataKey, tryGetConfig } from "../modules/configuration.js";
 import {
@@ -19,12 +18,26 @@ import {
 } from "../modules/custom_button.js";
 import { addClickEvent, createPromise } from "../modules/helpers.js";
 
-function initialize() {
+type CustomButton = {
+  elementId: string;
+  iconClass: string;
+  iconColor: string;
+  text: string;
+  path?: string;
+};
 
-  tryGetConfig(dataKey, (data) => {
-    const config = data[dataKey] ?? {};
+type ClickEventLocation = {
+  origin: string;
+  href: string;
+  tabId?: number;
+};
 
-    const customButtons = [...CUSTOM_BUTTONS];
+function initialize(): void {
+
+  tryGetConfig(dataKey, (data: Record<string, unknown>) => {
+    const config = (data[dataKey] as Record<string, boolean>) ?? {};
+
+    const customButtons = [...CUSTOM_BUTTONS] as CustomButton[];
     const customButtonsToRender = customButtons.filter(
       (button) => !config[button.elementId]
     );
@@ -34,7 +47,7 @@ function initialize() {
   });
 }
 
-function getCurrentTab() {
+function getCurrentTab(): Promise<chrome.tabs.Tab> {
   return createPromise((resolve, reject) => {
     window.chrome.tabs.query(
       { active: true, lastFocusedWindow: true },
@@ -46,22 +59,31 @@ function getCurrentTab() {
   });
 }
 
-function createAnchorElementFromTabUrl(tab) {
+function createAnchorElementFromTabUrl(
+  tab: chrome.tabs.Tab
+): Promise<HTMLAnchorElement & { tabId?: number }> {
   return createPromise((resolve, reject) => {
-    if (!tab.url) reject(new Error("Tab url was not found"));
+    const tabUrl = tab.url ?? "";
+    if (!tabUrl) reject(new Error("Tab url was not found"));
 
     const anchorElement = document.createElement("a") as HTMLAnchorElement & {
       tabId?: number;
     };
 
-    anchorElement.href = tab.url;
+    anchorElement.href = tabUrl;
     anchorElement.tabId = tab.id;
 
     resolve(anchorElement);
   });
 }
 
-function createClickEventContext(path, callback) {
+function createClickEventContext(
+  path: string | null,
+  callback: (
+    path: string | null,
+    location: ClickEventLocation
+  ) => void
+): () => void {
   return () => {
     getCurrentTab()
       .then((tab) => createAnchorElementFromTabUrl(tab))
@@ -72,7 +94,7 @@ function createClickEventContext(path, callback) {
   };
 }
 
-function renderCustomButtons(buttons) {
+function renderCustomButtons(buttons: CustomButton[]): void {
   let buttonElementTemplates = "";
 
   buttons.forEach((button) => {
@@ -83,18 +105,21 @@ function renderCustomButtons(buttons) {
     buttonElementTemplates
   );
 
-  document.getElementById("container").prepend(customButtonElements);
+  const container = document.getElementById("container");
+  if (container && customButtonElements) {
+    container.prepend(customButtonElements);
+  }
 }
 
-function addClickEvents(buttons) {
+function addClickEvents(buttons: CustomButton[]): void {
   buttons.forEach((button) => {
-    if(button.path !== undefined) {
+    if (button.path !== undefined) {
       addClickEvent(
         button.elementId,
         createClickEventContext(button.path, goToCustomPath)
-      )
+      );
     }
- });
+  });
 
   addClickEvent("api-entity", createClickEventContext(null, goToEntity));
   addClickEvent("api-entity-id", createClickEventContext(null, goToEntityById));
@@ -117,7 +142,6 @@ function addClickEvents(buttons) {
     createClickEventContext(null, goToMessageMgmtById)
   );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
-  addClickEvent("settings_post", createClickEventContext(null, sendPostRequestToSettings));
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());
