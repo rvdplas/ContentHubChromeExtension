@@ -50,6 +50,12 @@ export const CUSTOM_BUTTONS = [
         path: PATHS.CUSTOM.Settings
     },
     {
+        elementId: "settings_post",
+        text: "Settings POST",
+        image: "./public/images/settings.png",
+        path: undefined
+    },
+    {
         elementId: "taxonomy",
         text: "Taxonomy",
         image: "./public/images/taxonomy.png",

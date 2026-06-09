@@ -10,6 +10,7 @@ import {
   goToMessageMgmtById,
   goToOptionList,
   goToQueues,
+  sendPostRequestToSettings,
 } from "../modules/clickevent_callbacks.js";
 import { dataKey, tryGetConfig } from "../modules/configuration.js";
 import {
@@ -53,6 +54,7 @@ function createAnchorElementFromTabUrl(tab) {
 
     const anchorElement = document.createElement("a");
     anchorElement.href = tab.url;
+    anchorElement.tabId = tab.id;
 
     resolve(anchorElement);
   });
@@ -84,12 +86,14 @@ function renderCustomButtons(buttons) {
 }
 
 function addClickEvents(buttons) {
-  buttons.forEach((button) =>
-    addClickEvent(
-      button.elementId,
-      createClickEventContext(button.path, goToCustomPath)
-    )
-  );
+  buttons.forEach((button) => {
+    if(button.path !== undefined) {
+      addClickEvent(
+        button.elementId,
+        createClickEventContext(button.path, goToCustomPath)
+      )
+    }
+ });
 
   addClickEvent("api-entity", createClickEventContext(null, goToEntity));
   addClickEvent("api-entity-id", createClickEventContext(null, goToEntityById));
@@ -112,6 +116,7 @@ function addClickEvents(buttons) {
     createClickEventContext(null, goToMessageMgmtById)
   );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
+  addClickEvent("settings_post", createClickEventContext(null, sendPostRequestToSettings));
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());
