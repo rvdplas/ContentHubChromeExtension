@@ -1,0 +1,227 @@
+import {
+  createTab,
+  getLastSegment,
+  replaceTemplate,
+  isEmpty,
+} from "./helpers.js";
+import { PATHS } from "../data/paths.js";
+
+type ClickEventLocation = {
+  origin: string;
+  href: string;
+  tabId?: number;
+};
+
+export function goToCustomPath(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  return createTab(replaceTemplate(path ?? "", [["origin", location.origin]]));
+}
+
+// redirects to api/entities
+export function goToEntity(path: string | null, location: ClickEventLocation) {
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", getLastSegment(location.href)],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITY, args));
+}
+
+// redirects to api/entities
+export function goToAsset(path: string | null, location: ClickEventLocation) {
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", getLastSegment(location.href)],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.APIASSET, args));
+}
+
+// ask for id and redirect to api/entities
+export function goToEntityById(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let entityId = prompt("Enter entity ID");
+  if (isEmpty(entityId)) {
+    alert("You haven't specified entity ID");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", entityId],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITY, args));
+}
+
+// ask for id and redirect to api/entities
+export function goToEntityByIdentifier(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let entityIdentifier = prompt("Enter entity Identifier");
+  if (isEmpty(entityIdentifier)) {
+    alert("You haven't specified entity Identifier");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityIdentifier", entityIdentifier],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.APIENTITYIDENTIFIER, args));
+}
+
+// ask for id and redirect to api/datasources
+export function goToOptionList(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let datasource = prompt("Enter Option List name");
+  if (isEmpty(datasource)) {
+    alert("You haven't specified any Option List name");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["datasource", datasource],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.OPTIONLIST, args));
+}
+
+// asks for entity id and redirects to entity management
+export function goToEntityMgmtById(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let entityId = prompt("Enter entity ID");
+  if (isEmpty(entityId)) {
+    alert("You haven't specified entity ID");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", entityId],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYMGMT, args));
+}
+
+// asks for message id and redirects to entity management
+export function goToMessageMgmtById(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let entityId = prompt("Enter message ID");
+  if (isEmpty(entityId)) {
+    alert("You haven't specified message ID");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", entityId],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.MESSAGEMGMT, args));
+}
+
+// asks for definition name and redirects to api/definition
+export function goToEntityDefinition(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let definitionName = prompt("Enter entity definition");
+  if (isEmpty(definitionName)) {
+    alert("You haven't specified entity definition name");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["definition", definitionName],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYDEFINITION, args));
+}
+
+// redirect to current entity management
+export function goToEntityMgmt(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", getLastSegment(location.href)],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.ENTITYMGMT, args));
+}
+
+// redirects to api/entities
+export function goToQueues(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+    ["entityId", getLastSegment(location.href)],
+  ];
+  createTab(replaceTemplate(PATHS.DEFAULT.QUEUES, args));
+}
+
+// sends POST request to Settings
+export function sendPostRequestToSettings(
+  path: string | null,
+  location: ClickEventLocation
+) {
+  let settingCategoryId = prompt("Enter SettingCategoryId");
+  if (isEmpty(settingCategoryId)) {
+    alert("You haven't specified SettingCategoryId");
+    return;
+  }
+  let settingName = prompt("Enter SettingName");
+  if (isEmpty(settingName)) {
+    alert("You haven't specified SettingName");
+    return;
+  }
+  let settingLabel = prompt("Enter SettingLabel");
+  if (isEmpty(settingLabel)) {
+    alert("You haven't specified SettingLabel");
+    return;
+  }
+  const args: [string, string | null][] = [
+    ["origin", location.origin],
+  ];
+  const jsonData: any = {};
+  jsonData.id = -1;
+  jsonData.entitydefinition = {
+    href: `${location.origin}/api/entitydefinitions/M.Setting`,
+    templated: false
+  };
+  jsonData.cultures = ["en-US"];
+  jsonData.relations = {
+    SettingCategoryToSettings: {
+      inheritsSecurity: true,
+      parent: {
+        templated: false,
+        href: `${location.origin}/api/entities/${settingCategoryId}`
+      },
+      self: {
+        templated: false,
+        href: `${location.origin}/api/entities/-1/relations/SettingCategoryToSettings?id=-1&name=SettingCategoryToSettings`
+      }
+    }
+  };
+  jsonData.properties = {
+    "M.Setting.Name": `${settingName}`,
+    "M.Setting.Label": {
+      "en-US": `${settingLabel}`
+    },
+    "M.Setting.Value": {},
+  };
+  jsonData.renditions = {};
+  jsonData.self = {
+    href: `${location.origin}/api/entities/-1`,
+    templated: false,
+  }
+
+  // fetch API function is used in content-script.js
+  chrome.tabs.sendMessage(Number(location.tabId),
+    {url: replaceTemplate(PATHS.CUSTOM.SettingsPost, args), jsonData: JSON.stringify(jsonData)}
+  );
+}
+

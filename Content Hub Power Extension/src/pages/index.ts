@@ -1,0 +1,147 @@
+import { CUSTOM_BUTTONS } from "../data/custom_button_data.js";
+import {
+  goToCustomPath,
+  goToEntity,
+  goToEntityById,
+  goToEntityByIdentifier,
+  goToEntityDefinition,
+  goToEntityMgmt,
+  goToEntityMgmtById,
+  goToMessageMgmtById,
+  goToOptionList,
+  goToQueues,
+} from "../modules/clickevent_callbacks.js";
+import { dataKey, tryGetConfig } from "../modules/configuration.js";
+import {
+  createCustomButtonTemplate,
+  parseCustomButtonTemplates,
+} from "../modules/custom_button.js";
+import { addClickEvent, createPromise } from "../modules/helpers.js";
+
+type CustomButton = {
+  elementId: string;
+  iconClass: string;
+  iconColor: string;
+  text: string;
+  path?: string;
+};
+
+type ClickEventLocation = {
+  origin: string;
+  href: string;
+  tabId?: number;
+};
+
+function initialize(): void {
+
+  tryGetConfig(dataKey, (data: Record<string, unknown>) => {
+    const config = (data[dataKey] as Record<string, boolean>) ?? {};
+
+    const customButtons = [...CUSTOM_BUTTONS] as CustomButton[];
+    const customButtonsToRender = customButtons.filter(
+      (button) => !config[button.elementId]
+    );
+
+    renderCustomButtons(customButtonsToRender);
+    addClickEvents(customButtonsToRender);
+  });
+}
+
+function getCurrentTab(): Promise<chrome.tabs.Tab> {
+  return createPromise((resolve, reject) => {
+    window.chrome.tabs.query(
+      { active: true, lastFocusedWindow: true },
+      (tabs) => {
+        if (!tabs.length) reject("Current tab was not found");
+        resolve(tabs[0]);
+      }
+    );
+  });
+}
+
+function createAnchorElementFromTabUrl(
+  tab: chrome.tabs.Tab
+): Promise<HTMLAnchorElement & { tabId?: number }> {
+  return createPromise((resolve, reject) => {
+    const tabUrl = tab.url ?? "";
+    if (!tabUrl) reject(new Error("Tab url was not found"));
+
+    const anchorElement = document.createElement("a") as HTMLAnchorElement & {
+      tabId?: number;
+    };
+
+    anchorElement.href = tabUrl;
+    anchorElement.tabId = tab.id;
+
+    resolve(anchorElement);
+  });
+}
+
+function createClickEventContext(
+  path: string | null,
+  callback: (
+    path: string | null,
+    location: ClickEventLocation
+  ) => void
+): () => void {
+  return () => {
+    getCurrentTab()
+      .then((tab) => createAnchorElementFromTabUrl(tab))
+      .then((element) => callback(path, element))
+      .catch((error) =>
+        console.error("error creating click event context: ", error)
+      );
+  };
+}
+
+function renderCustomButtons(buttons: CustomButton[]): void {
+  let buttonElementTemplates = "";
+
+  buttons.forEach((button) => {
+    buttonElementTemplates += createCustomButtonTemplate(button);
+  });
+
+  const customButtonElements = parseCustomButtonTemplates(
+    buttonElementTemplates
+  );
+
+  const container = document.getElementById("container");
+  if (container && customButtonElements) {
+    container.prepend(customButtonElements);
+  }
+}
+
+function addClickEvents(buttons: CustomButton[]): void {
+  buttons.forEach((button) => {
+    if (button.path !== undefined) {
+      addClickEvent(
+        button.elementId,
+        createClickEventContext(button.path, goToCustomPath)
+      );
+    }
+  });
+
+  addClickEvent("api-entity", createClickEventContext(null, goToEntity));
+  addClickEvent("api-entity-id", createClickEventContext(null, goToEntityById));
+  addClickEvent(
+    "api-entity-identifier",
+    createClickEventContext(null, goToEntityByIdentifier)
+  );
+  addClickEvent("entitymngmt", createClickEventContext(null, goToEntityMgmt));
+  addClickEvent(
+    "entitymngmt-id",
+    createClickEventContext(null, goToEntityMgmtById)
+  );
+  addClickEvent(
+    "entity-definition",
+    createClickEventContext(null, goToEntityDefinition)
+  );
+  addClickEvent("option-list", createClickEventContext(null, goToOptionList));
+  addClickEvent(
+    "messagemngmt-id",
+    createClickEventContext(null, goToMessageMgmtById)
+  );
+  addClickEvent("queues", createClickEventContext(null, goToQueues));
+}
+
+document.addEventListener("DOMContentLoaded", () => initialize());

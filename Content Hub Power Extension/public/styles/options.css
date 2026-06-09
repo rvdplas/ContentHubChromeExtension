@@ -38,7 +38,6 @@
 #checkbox-container div label {
   display: flex;
   align-items: center;
-  gap: 6px;
 }
 
 a {
