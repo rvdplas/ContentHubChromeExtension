@@ -23,13 +23,9 @@ export function createCheckboxTemplate(checkboxData: CheckboxData): string {
 
 export function parseCheckboxTemplates(
   buttonTemplates: string
-): HTMLElement | null {
-  const buttonsTemplate = `
-      <div id="checkbox-container">
-          ${buttonTemplates}
-      </div>
-      `;
-  const dom = new DOMParser().parseFromString(buttonsTemplate, "text/html");
+): DocumentFragment {
+  const template = document.createElement("template");
+  template.innerHTML = buttonTemplates;
 
-  return dom.getElementById("checkbox-container");
+  return template.content;
 }

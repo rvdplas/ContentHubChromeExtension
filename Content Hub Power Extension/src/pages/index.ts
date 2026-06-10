@@ -11,12 +11,17 @@ import {
   goToOptionList,
   goToQueues,
 } from "../modules/clickevent_callbacks.js";
-import { dataKey, tryGetConfig } from "../modules/configuration.js";
+import { dataKey, customLinkDataKey, tryGetConfig } from "../modules/configuration.js";
 import {
   createCustomButtonTemplate,
   parseCustomButtonTemplates,
 } from "../modules/custom_button.js";
-import { addClickEvent, createPromise } from "../modules/helpers.js";
+import {
+  createCustomLinkTemplate,
+  parseCustomLinkTemplates,
+  CustomLink,
+} from "../modules/custom_link.js";
+import { addClickEvent, createPromise, createTab } from "../modules/helpers.js";
 
 type CustomButton = {
   elementId: string;
@@ -33,17 +38,30 @@ type ClickEventLocation = {
 };
 
 function initialize(): void {
-
   tryGetConfig(dataKey, (data: Record<string, unknown>) => {
     const config = (data[dataKey] as Record<string, boolean>) ?? {};
 
-    const customButtons = [...CUSTOM_BUTTONS] as CustomButton[];
-    const customButtonsToRender = customButtons.filter(
-      (button) => !config[button.elementId]
-    );
+    tryGetConfig(customLinkDataKey, (linkData: Record<string, unknown>) => {
+      const customLinks = (linkData[customLinkDataKey] as CustomLink[]) ?? [];
 
-    renderCustomButtons(customButtonsToRender);
-    addClickEvents(customButtonsToRender);
+      const customButtons = [...CUSTOM_BUTTONS] as CustomButton[];
+      const customButtonsToRender = customButtons.filter(
+        (button) => !config[button.elementId]
+      );
+
+      renderCustomButtons(customButtonsToRender);
+
+      getCurrentTab()
+        .then(() => {
+          renderCustomLinks(customLinks);
+          addClickEvents(customButtonsToRender, customLinks);
+        })
+        .catch((error) => {
+          console.error("Unable to determine current tab for custom links:", error);
+          renderCustomLinks([]);
+          addClickEvents(customButtonsToRender, []);
+        });
+    });
   });
 }
 
@@ -94,6 +112,26 @@ function createClickEventContext(
   };
 }
 
+function resolveLinkUrl(linkUrl: string, baseUrl: string): string {
+  try {
+    return new URL(linkUrl).href;
+  } catch {
+    return new URL(linkUrl, baseUrl).href;
+  }
+}
+
+function openCustomLinkUrl(linkUrl: string): void {
+  getCurrentTab()
+    .then((tab) => {
+      const tabUrl = tab.url ?? window.location.href;
+      const resolvedUrl = resolveLinkUrl(linkUrl, tabUrl);
+      createTab(resolvedUrl);
+    })
+    .catch((error) =>
+      console.error("Unable to resolve custom link URL:", error)
+    );
+}
+
 function renderCustomButtons(buttons: CustomButton[]): void {
   let buttonElementTemplates = "";
 
@@ -105,13 +143,37 @@ function renderCustomButtons(buttons: CustomButton[]): void {
     buttonElementTemplates
   );
 
-  const container = document.getElementById("container");
+  const container = document.getElementById("built-in-column");
   if (container && customButtonElements) {
-    container.prepend(customButtonElements);
+    container.append(customButtonElements);
   }
 }
 
-function addClickEvents(buttons: CustomButton[]): void {
+function renderCustomLinks(links: CustomLink[]): void {
+  let buttonElementTemplates = "";
+
+  links.forEach((link) => {
+    buttonElementTemplates += createCustomLinkTemplate(link);
+  });
+
+  const customLinkElements = parseCustomLinkTemplates(buttonElementTemplates);
+  const container = document.getElementById("custom-links-column");
+  if (container && customLinkElements) {
+    container.append(customLinkElements);
+  }
+  else {
+    const parentContainer = document.getElementById("custom-links-column");
+    if (parentContainer) {
+      parentContainer.append(document.createTextNode("No custom links found for this host"));
+    }
+  }
+}
+
+function addClickEvents(buttons: CustomButton[], customLinks: CustomLink[]): void {
+  customLinks.forEach((link) => {
+    addClickEvent(link.id, () => openCustomLinkUrl(link.url));
+  });
+
   buttons.forEach((button) => {
     if (button.path !== undefined) {
       addClickEvent(

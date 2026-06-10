@@ -1,4 +1,5 @@
 export const dataKey = "custom_buttons_config";
+export const customLinkDataKey = "custom_links_config";
 
 type StorageCallback = (items: Record<string, unknown>) => void;
 
