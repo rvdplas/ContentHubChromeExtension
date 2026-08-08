@@ -1,4 +1,5 @@
 import { CUSTOM_BUTTONS } from "../data/custom_button_data.js";
+import { CHEAT_SHEET_REGISTRY } from "../data/cheat_sheet_registry.js";
 import {
   goToCustomPath,
   goToEntity,
@@ -50,6 +51,7 @@ function initialize(): void {
       );
 
       renderCustomButtons(customButtonsToRender);
+      renderCheatSheets();
 
       getCurrentTab()
         .then(() => {
@@ -204,33 +206,38 @@ function addClickEvents(buttons: CustomButton[], customLinks: CustomLink[]): voi
     createClickEventContext(null, goToMessageMgmtById)
   );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
-
-  wireCheatSheetButton();
 }
 
-function wireCheatSheetButton(): void {
-  const btn = document.getElementById('cheatsheet-btn');
-  if (!btn) return;
+function renderCheatSheets(): void {
+  const column = document.getElementById('cheatsheet-column');
+  if (!column) return;
 
-  getCurrentTab()
-    .then((tab) => {
-      const tabUrl = tab.url ?? '';
-      const isScriptsPage = tabUrl.includes('/en-us/admin/scripts');
+  const wrapper = document.createElement('div');
 
-      if (isScriptsPage) {
-        btn.classList.add('contextual');
-      }
+  for (const sheet of CHEAT_SHEET_REGISTRY) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
 
-      btn.addEventListener('click', () => {
-        const base = chrome.runtime.getURL('cheatsheet.html');
-        createTab(isScriptsPage ? `${base}?sheet=scripting` : base);
-      });
-    })
-    .catch(() => {
-      btn.addEventListener('click', () => {
-        createTab(chrome.runtime.getURL('cheatsheet.html'));
-      });
+    const icon = document.createElement('span');
+    icon.className = `icon ${sheet.iconClass}`;
+    icon.style.backgroundColor = sheet.iconColor;
+    icon.setAttribute('aria-hidden', 'true');
+
+    const label = document.createElement('span');
+    label.textContent = sheet.title;
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
+
+    btn.addEventListener('click', () => {
+      const url = chrome.runtime.getURL(`cheatsheet.html?sheet=${encodeURIComponent(sheet.id)}`);
+      createTab(url);
     });
+
+    wrapper.appendChild(btn);
+  }
+
+  column.appendChild(wrapper);
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());
