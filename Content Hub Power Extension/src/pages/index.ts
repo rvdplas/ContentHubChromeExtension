@@ -1,4 +1,5 @@
 import { CUSTOM_BUTTONS } from "../data/custom_button_data.js";
+import { CHEAT_SHEET_REGISTRY } from "../data/cheat_sheet_registry.js";
 import {
   goToCustomPath,
   goToEntity,
@@ -50,6 +51,7 @@ function initialize(): void {
       );
 
       renderCustomButtons(customButtonsToRender);
+      renderCheatSheets();
 
       getCurrentTab()
         .then(() => {
@@ -150,22 +152,23 @@ function renderCustomButtons(buttons: CustomButton[]): void {
 }
 
 function renderCustomLinks(links: CustomLink[]): void {
-  let buttonElementTemplates = "";
+  const column = document.getElementById('custom-links-column');
+  if (!column) return;
+
+  if (links.length === 0) {
+    column.remove();
+    return;
+  }
+
+  let buttonElementTemplates = '';
 
   links.forEach((link) => {
     buttonElementTemplates += createCustomLinkTemplate(link);
   });
 
   const customLinkElements = parseCustomLinkTemplates(buttonElementTemplates);
-  const container = document.getElementById("custom-links-column");
-  if (container && customLinkElements) {
-    container.append(customLinkElements);
-  }
-  else {
-    const parentContainer = document.getElementById("custom-links-column");
-    if (parentContainer) {
-      parentContainer.append(document.createTextNode("No custom links found for this host"));
-    }
+  if (customLinkElements) {
+    column.append(customLinkElements);
   }
 }
 
@@ -204,6 +207,38 @@ function addClickEvents(buttons: CustomButton[], customLinks: CustomLink[]): voi
     createClickEventContext(null, goToMessageMgmtById)
   );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
+}
+
+function renderCheatSheets(): void {
+  const column = document.getElementById('cheatsheet-column');
+  if (!column) return;
+
+  const wrapper = document.createElement('div');
+
+  for (const sheet of CHEAT_SHEET_REGISTRY) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+
+    const icon = document.createElement('span');
+    icon.className = `icon ${sheet.iconClass}`;
+    icon.style.backgroundColor = sheet.iconColor;
+    icon.setAttribute('aria-hidden', 'true');
+
+    const label = document.createElement('span');
+    label.textContent = sheet.title;
+
+    btn.appendChild(icon);
+    btn.appendChild(label);
+
+    btn.addEventListener('click', () => {
+      const url = chrome.runtime.getURL(`cheatsheet.html?sheet=${encodeURIComponent(sheet.id)}`);
+      createTab(url);
+    });
+
+    wrapper.appendChild(btn);
+  }
+
+  column.appendChild(wrapper);
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());
