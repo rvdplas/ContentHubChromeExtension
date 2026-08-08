@@ -1,0 +1,299 @@
+/* ── Shared page layout ─────────────────────────────────────────────────── */
+
+body {
+  min-width: 860px;
+}
+
+.page-title {
+  margin: 0 0 24px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title .icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+#container {
+  display: block;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+}
+
+/* ── Index view ─────────────────────────────────────────────────────────── */
+
+.sheet-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.sheet-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 20px;
+  background: #1f2a31;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  color: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+
+.sheet-card:hover {
+  border-color: rgba(222, 83, 224, 0.5);
+  box-shadow: 0 0 0 2px rgba(222, 83, 224, 0.15);
+}
+
+.sheet-card .icon {
+  width: 32px;
+  height: 32px;
+}
+
+.sheet-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sheet-card-desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.45;
+}
+
+.sheet-card-count {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: auto;
+}
+
+/* ── Sheet view ─────────────────────────────────────────────────────────── */
+
+.back-link {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: white;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1f2a31;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.search-bar::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: rgba(222, 83, 224, 0.6);
+}
+
+/* ── Tab navigation ─────────────────────────────────────────────────────── */
+
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 7px 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+}
+
+.tab-btn.active {
+  background: rgb(222, 83, 224);
+  border-color: transparent;
+  color: white;
+  font-weight: 600;
+}
+
+/* ── Entry cards ────────────────────────────────────────────────────────── */
+
+.entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entry-card {
+  padding: 16px 20px;
+  background: #1f2a31;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.category-badge.category-script-types { background: rgba(244,  89,  90, 0.2); color: rgb(244, 140, 140); }
+.category-badge.category-mclient      { background: rgba(105, 135, 249, 0.2); color: rgb(147, 170, 255); }
+.category-badge.category-context      { background: rgba(147, 115, 255, 0.2); color: rgb(185, 165, 255); }
+.category-badge.category-snippets     { background: rgba(222,  83, 224, 0.2); color: rgb(240, 150, 241); }
+
+.entry-title {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.entry-description {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ── Code snippet block ─────────────────────────────────────────────────── */
+
+.snippet-block {
+  position: relative;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0d1518;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.snippet-block pre {
+  margin: 0;
+  padding: 14px 100px 14px 16px;
+  overflow-x: auto;
+}
+
+.snippet-block code {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.78rem;
+  color: #cdd6f4;
+  white-space: pre;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.copy-btn.copied {
+  background: rgba(74, 222, 128, 0.2);
+  border-color: rgba(74, 222, 128, 0.4);
+  color: rgb(134, 239, 172);
+}
+
+/* ── Docs link ──────────────────────────────────────────────────────────── */
+
+.docs-link {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: rgba(147, 115, 255, 0.85);
+  text-decoration: none;
+}
+
+.docs-link:hover {
+  color: rgb(185, 165, 255);
+  text-decoration: underline;
+}
+
+/* ── Empty state ────────────────────────────────────────────────────────── */
+
+.empty-message {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* ── Popup: docs button in header ───────────────────────────────────────── */
+
+#cheatsheet-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+#cheatsheet-btn .icon {
+  width: 25px;
+  height: 25px;
+  background-color: rgba(255, 255, 255, 0.55);
+  transition: background-color 0.15s;
+}
+
+#cheatsheet-btn:hover .icon {
+  background-color: white;
+}
+
+#cheatsheet-btn.contextual .icon {
+  background-color: rgb(222, 83, 224);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(222, 83, 224, 0); }
+  50%       { box-shadow: 0 0 0 5px rgba(222, 83, 224, 0.3); }
+}
+
+#cheatsheet-btn.contextual {
+  border-radius: 50%;
+  animation: pulse-glow 2s ease-in-out infinite;
+}

@@ -204,6 +204,33 @@ function addClickEvents(buttons: CustomButton[], customLinks: CustomLink[]): voi
     createClickEventContext(null, goToMessageMgmtById)
   );
   addClickEvent("queues", createClickEventContext(null, goToQueues));
+
+  wireCheatSheetButton();
+}
+
+function wireCheatSheetButton(): void {
+  const btn = document.getElementById('cheatsheet-btn');
+  if (!btn) return;
+
+  getCurrentTab()
+    .then((tab) => {
+      const tabUrl = tab.url ?? '';
+      const isScriptsPage = tabUrl.includes('/en-us/admin/scripts');
+
+      if (isScriptsPage) {
+        btn.classList.add('contextual');
+      }
+
+      btn.addEventListener('click', () => {
+        const base = chrome.runtime.getURL('cheatsheet.html');
+        createTab(isScriptsPage ? `${base}?sheet=scripting` : base);
+      });
+    })
+    .catch(() => {
+      btn.addEventListener('click', () => {
+        createTab(chrome.runtime.getURL('cheatsheet.html'));
+      });
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => initialize());
