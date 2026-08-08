@@ -28,10 +28,13 @@ body {
 
 /* ── Index view ─────────────────────────────────────────────────────────── */
 
-.sheet-index {
+/* Higher specificity needed to beat #container > div in global.css */
+#container .sheet-index {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
+  align-items: start;
+  flex: unset;
 }
 
 .sheet-card {
@@ -48,11 +51,17 @@ body {
   color: white;
   transition: border-color 0.15s, box-shadow 0.15s;
   width: 100%;
+  /* Reset global button overrides */
+  height: auto;
+  overflow: visible;
+  margin-bottom: 0;
 }
 
 .sheet-card:hover {
   border-color: rgba(222, 83, 224, 0.5);
   box-shadow: 0 0 0 2px rgba(222, 83, 224, 0.15);
+  background: #1f2a31;
+  color: white;
 }
 
 .sheet-card .icon {
@@ -75,6 +84,10 @@ body {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.4);
   margin-top: auto;
+  /* Reset global button > span:last-child */
+  flex: 0 0 auto;
+  overflow: visible;
+  white-space: normal;
 }
 
 /* ── Sheet view ─────────────────────────────────────────────────────────── */
@@ -115,32 +128,39 @@ body {
 
 .tab-nav {
   display: flex;
-  gap: 4px;
+  gap: 0;
   margin-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   flex-wrap: wrap;
 }
 
 .tab-btn {
-  padding: 7px 16px;
+  padding: 8px 18px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: color 0.15s, border-color 0.15s;
+  /* Reset global button overrides */
+  width: auto;
+  height: auto;
+  margin-bottom: -2px;
+  overflow: visible;
 }
 
 .tab-btn:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: transparent;
   color: white;
 }
 
 .tab-btn.active {
-  background: rgb(222, 83, 224);
-  border-color: transparent;
+  border-bottom-color: rgb(222, 83, 224);
   color: white;
   font-weight: 600;
+  background: transparent;
 }
 
 /* ── Entry cards ────────────────────────────────────────────────────────── */
@@ -171,10 +191,17 @@ body {
   color: rgba(255, 255, 255, 0.65);
 }
 
-.category-badge.category-script-types { background: rgba(244,  89,  90, 0.2); color: rgb(244, 140, 140); }
-.category-badge.category-mclient      { background: rgba(105, 135, 249, 0.2); color: rgb(147, 170, 255); }
-.category-badge.category-context      { background: rgba(147, 115, 255, 0.2); color: rgb(185, 165, 255); }
-.category-badge.category-snippets     { background: rgba(222,  83, 224, 0.2); color: rgb(240, 150, 241); }
+.category-badge.category-script-types  { background: rgba(244,  89,  90, 0.2); color: rgb(244, 140, 140); }
+.category-badge.category-mclient        { background: rgba(105, 135, 249, 0.2); color: rgb(147, 170, 255); }
+.category-badge.category-context        { background: rgba(147, 115, 255, 0.2); color: rgb(185, 165, 255); }
+.category-badge.category-snippets       { background: rgba(222,  83, 224, 0.2); color: rgb(240, 150, 241); }
+.category-badge.category-restrictions   { background: rgba(250, 176,   5, 0.2); color: rgb(255, 210,  95); }
+.category-badge.category-overview       { background: rgba(100, 116, 139, 0.2); color: rgb(180, 196, 216); }
+.category-badge.category-configuration  { background: rgba( 20, 184, 166, 0.2); color: rgb( 94, 234, 212); }
+.category-badge.category-conditions     { background: rgba( 99, 102, 241, 0.2); color: rgb(165, 180, 252); }
+.category-badge.category-tips           { background: rgba(250, 176,   5, 0.2); color: rgb(255, 210,  95); }
+.category-badge.category-types          { background: rgba( 34, 197,  94, 0.2); color: rgb(134, 239, 172); }
+.category-badge.category-behavior       { background: rgba(168,  85, 247, 0.2); color: rgb(216, 180, 254); }
 
 .entry-title {
   margin: 0 0 6px;
@@ -187,6 +214,27 @@ body {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
+}
+
+.entry-note,
+.entry-warning {
+  margin: 0 0 12px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  border-radius: 0 6px 6px 0;
+}
+
+.entry-note {
+  background: rgba(105, 135, 249, 0.1);
+  border-left: 3px solid rgba(105, 135, 249, 0.55);
+  color: rgb(180, 200, 255);
+}
+
+.entry-warning {
+  background: rgba(250, 176, 5, 0.1);
+  border-left: 3px solid rgba(250, 176, 5, 0.55);
+  color: rgb(255, 210, 95);
 }
 
 /* ── Code snippet block ─────────────────────────────────────────────────── */
@@ -226,6 +274,11 @@ body {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
+  /* Reset global button overrides */
+  height: auto;
+  width: auto;
+  margin-bottom: 0;
+  display: inline-block;
 }
 
 .copy-btn:hover {

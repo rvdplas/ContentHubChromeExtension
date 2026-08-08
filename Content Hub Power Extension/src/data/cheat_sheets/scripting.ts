@@ -2,17 +2,36 @@ import type { CheatSheetDefinition } from '../cheat_sheet_registry.js';
 
 export const SCRIPTING_CHEAT_SHEET: CheatSheetDefinition = {
   id: 'scripting',
-  title: 'Scripting Reference',
+  title: 'Scripting',
   description: 'MClient properties, context variables, script types and common C# snippets for Content Hub scripts.',
   iconClass: 'icon--script-outline',
   iconColor: 'rgb(222, 83, 224)',
+  categoryOrder: ['script-types', 'restrictions', 'context', 'mclient', 'snippets'],
   entries: [
-    // ── Script types ────────────────────────────────────────────────────────
+    // ── Script types ──────────────────────────────────────────────────────────────────
+    {
+      id: 'st-execution-phases',
+      category: 'script-types',
+      title: 'Action — Execution phases',
+      description: 'Action phases fire in a fixed sequence. Pre-commit, Validation, and Security run in-process and can influence the event; Audit and Post run after it completes.',
+      note: 'Avoid using In Process action scripts for UI interactions or time-consuming operations.',
+      snippet:
+`// Phase order for a triggering event:
+// 1. Pre-commit  — mutate event data; In Process only
+// 2. Validation  — throw ValidationException to reject
+// 3. Security    — throw SecurityException to deny
+// 4. [event completes]
+// 5. Audit       — log only; cannot modify the event
+// 6. Post        — side-effects; can run Out of Process`,
+      tags: ['phases', 'execution', 'pre-commit', 'validation', 'security', 'audit', 'post', 'order', 'sequence'],
+      docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-types.html',
+    },
     {
       id: 'st-action-precommit',
       category: 'script-types',
       title: 'Action — Pre-commit',
-      description: 'Runs before the triggering event completes. The only phase that can modify event data (e.g., populate default values). Can be In Process only.',
+      description: 'Runs before the triggering event completes. Use to populate default values. Can be In Process only.',
+      note: 'Pre-commit is the only phase where scripts can modify the event\u2019s data.',
       tags: ['action', 'pre-commit', 'trigger', 'modify'],
       docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-types.html',
     },
@@ -62,7 +81,8 @@ export const SCRIPTING_CHEAT_SHEET: CheatSheetDefinition = {
       id: 'st-signin',
       category: 'script-types',
       title: 'User Sign-in',
-      description: 'Runs every time a user logs in. Warning: a runtime error here can lock users out. Deactivate via REST API or SDK if needed.',
+      description: 'Runs every time a user logs in.',
+      warning: 'A runtime error in this script can lock users out. De-activate via REST API or SDK if that occurs.',
       tags: ['user', 'sign-in', 'authentication'],
       docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-types.html',
     },
@@ -86,9 +106,59 @@ export const SCRIPTING_CHEAT_SHEET: CheatSheetDefinition = {
       id: 'st-shared',
       category: 'script-types',
       title: 'Shared',
-      description: 'Reusable code referenced by one or more scripts of any type. When a shared script changes, all dependent scripts are rebuilt automatically.',
+      description: 'Reusable code referenced by one or more scripts of any type.',
+      note: 'All dependent scripts are rebuilt when a shared script changes. The shared script can only be published if all dependent scripts compile successfully.',
       tags: ['shared', 'reusable', 'library'],
       docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-types.html',
+    },
+    {
+      id: 'st-restrictions-blocked',
+      category: 'restrictions',
+      title: 'Script restrictions — blocked',
+      description: 'The following types are blocked in all scripts and cannot be used.',
+      warning: 'Keep total script run time below 10 minutes. After 12 minutes the script worker considers the script stuck, restarts it, and risks data inconsistency.',
+      snippet:
+`// Blocked libraries:
+System.Activator
+System.Environment
+System.GC
+System.Threading.TaskScheduler
+
+// Blocked attribute:
+System.Type:InvokeMember`,
+      tags: ['restrictions', 'blocked', 'libraries', 'timeout', 'activator', 'environment', 'gc', 'security'],
+      docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-restriction.html#blocked-libraries',
+    },
+    {
+      id: 'st-restrictions-permitted',
+      category: 'restrictions',
+      title: 'Script restrictions — permitted',
+      description: 'Scripts are restricted to a defined set of libraries. Partially permitted means only items directly in that namespace; fully permitted (**) includes all nested namespaces.',
+      note: 'Legacy unrestricted scripts keep working after an upgrade, but new unrestricted scripts cannot be created or published. Convert existing ones to restricted scripts.',
+      snippet:
+`// Partially permitted (top-level namespace only):
+Stylelabs.M.Base.Querying.Query / QuerySortOrder / ScrollRequest / Sorting
+System.Globalization.CultureInfo / DateTimeStyles
+System.Net.HttpStatusCode
+System.Security.Claims.ClaimTypes
+System.*  |  System.Threading.Tasks.*  |  System.Numerics.*
+
+// Fully permitted (includes all nested namespaces):
+Newtonsoft.**
+Stylelabs.M.Base.Querying.Filters.**
+Stylelabs.M.Base.Querying.Linq.**
+Stylelabs.M.Framework.Essentials.LoadConfigurations.**
+Stylelabs.M.Framework.Essentials.LoadOptions.**
+Stylelabs.M.Scripting.Types.**
+Stylelabs.M.Sdk.**  |  Stylelabs.M.Sdk.Fluent.**
+Stylelabs.M.Sdk.Models.Localization.**
+Stylelabs.M.Sdk.Models.Typed.**
+Stylelabs.M.Sdk.Search.**
+System.Collections.Generic.**
+System.Linq.**
+System.Text.**`,
+      tags: ['restrictions', 'permitted', 'libraries', 'namespaces', 'newtonsoft', 'sdk', 'system', 'linq', 'collections'],
+      docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-restriction.html',
     },
 
     // ── MClient ─────────────────────────────────────────────────────────────
@@ -317,6 +387,7 @@ Context.MetadataProperties  // IReadOnlyDictionary<string,JToken>`,
       category: 'context',
       title: 'Context — User Sign-in',
       description: 'Available in user sign-in scripts.',
+      warning: 'ExternalUserInfo is only available when AuthenticationSource is External.',
       snippet: `Context.AuthenticationSource  // Internal | External
 Context.User                  // IEntity — signed-in user
 Context.ExternalUserInfo      // provider, username, email, culture, claims
@@ -341,6 +412,7 @@ Context.Culture               // CultureInfo`,
       category: 'context',
       title: 'Context — User Post-registration',
       description: 'Available in user post-registration scripts.',
+      warning: 'ExternalInfo is only available when AuthenticationSource is External.',
       snippet: `Context.AuthenticationSource  // Internal | External
 Context.User                  // IEntity — the newly created user
 Context.ExternalInfo          // provider, username, email, culture, claims
@@ -496,6 +568,48 @@ relation?.SetIds(childIds.Append(relatedEntityId));
 
 await MClient.Entities.SaveAsync(entity);`,
       tags: ['relation', 'link', 'parent', 'child', 'related'],
+    },
+    {
+      id: 'snip-propertybag',
+      category: 'snippets',
+      title: 'PropertyBag read / write',
+      description: 'Members of type PropertyBag store an arbitrary JSON object. Read with GetPropertyValue<JObject> and write back a JObject.',
+      snippet:
+`// Read
+var bag = entity.GetPropertyValue<JObject>("MyPropertyBagMember");
+var value = bag?["myKey"]?.Value<string>();
+
+// Write
+var newBag = new JObject
+{
+    ["myKey"] = "myValue",
+    ["count"] = 42
+};
+entity.SetPropertyValue(
+    "MyPropertyBagMember",
+    CultureInfo.InvariantCulture,
+    newBag);
+await MClient.Entities.SaveAsync(entity);`,
+      tags: ['propertybag', 'property bag', 'json', 'jobject', 'jtoken', 'dictionary'],
+      docsUrl: 'https://doc.sitecore.com/ch/en/developers/cloud-dev/script-properties.html',
+    },
+    {
+      id: 'snip-isdirty',
+      category: 'snippets',
+      title: 'IsDirty guard',
+      description: 'Check IsDirty before saving to skip unnecessary saves and prevent trigger loops caused by re-saving an unchanged entity.',
+      snippet:
+`var entity = await MClient.Entities.GetAsync(entityId);
+
+// ... conditional modifications ...
+
+if (!entity.IsDirty)
+{
+    return; // nothing changed — skip save to avoid re-triggering events
+}
+
+await MClient.Entities.SaveAsync(entity);`,
+      tags: ['isdirty', 'dirty', 'guard', 'save', 'trigger loop', 'infinite loop', 'performance'],
     },
   ],
 };

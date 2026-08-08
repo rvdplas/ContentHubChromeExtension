@@ -6,10 +6,17 @@ import {
 } from '../data/cheat_sheet_registry.js';
 
 const CATEGORY_LABELS: Record<CheatSheetCategory, string> = {
-  'script-types': 'Script Types',
-  mclient:        'MClient',
-  context:        'Context',
-  snippets:       'Snippets',
+  'script-types':  'Script Types',
+  mclient:         'MClient',
+  context:         'Context',
+  snippets:        'Snippets',
+  restrictions:    'Restrictions',
+  overview:        'Overview',
+  configuration:   'Configuration',
+  conditions:      'Conditions',
+  tips:            'Tips & Gotchas',
+  types:           'Types',
+  behavior:        'Behavior',
 };
 
 function initialize(): void {
@@ -85,7 +92,8 @@ function buildSheetCard(sheet: CheatSheetDefinition): HTMLElement {
 // ── Sheet view ───────────────────────────────────────────────────────────────
 
 function renderSheetView(container: HTMLElement, sheet: CheatSheetDefinition): void {
-  const categories = [...new Set(sheet.entries.map((e) => e.category))] as CheatSheetCategory[];
+  const categorySet = new Set(sheet.entries.map((e) => e.category)) as Set<CheatSheetCategory>;
+  const categories = (sheet.categoryOrder ?? [...categorySet]).filter(c => categorySet.has(c));
   let activeCategory: CheatSheetCategory = categories[0];
   let searchText = '';
 
@@ -197,6 +205,20 @@ function buildEntryCard(entry: CheatSheetEntry, searchTerm: string): HTMLElement
   desc.className = 'entry-description';
   desc.textContent = entry.description;
   card.appendChild(desc);
+
+  if (entry.note) {
+    const noteEl = document.createElement('p');
+    noteEl.className = 'entry-note';
+    noteEl.textContent = entry.note;
+    card.appendChild(noteEl);
+  }
+
+  if (entry.warning) {
+    const warningEl = document.createElement('p');
+    warningEl.className = 'entry-warning';
+    warningEl.textContent = entry.warning;
+    card.appendChild(warningEl);
+  }
 
   if (entry.snippet) {
     const snippetBlock = document.createElement('div');
