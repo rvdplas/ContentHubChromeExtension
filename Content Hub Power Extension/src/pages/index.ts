@@ -152,22 +152,23 @@ function renderCustomButtons(buttons: CustomButton[]): void {
 }
 
 function renderCustomLinks(links: CustomLink[]): void {
-  let buttonElementTemplates = "";
+  const column = document.getElementById('custom-links-column');
+  if (!column) return;
+
+  if (links.length === 0) {
+    column.remove();
+    return;
+  }
+
+  let buttonElementTemplates = '';
 
   links.forEach((link) => {
     buttonElementTemplates += createCustomLinkTemplate(link);
   });
 
   const customLinkElements = parseCustomLinkTemplates(buttonElementTemplates);
-  const container = document.getElementById("custom-links-column");
-  if (container && customLinkElements) {
-    container.append(customLinkElements);
-  }
-  else {
-    const parentContainer = document.getElementById("custom-links-column");
-    if (parentContainer) {
-      parentContainer.append(document.createTextNode("No custom links found for this host"));
-    }
+  if (customLinkElements) {
+    column.append(customLinkElements);
   }
 }
 
